@@ -9,6 +9,41 @@
 </head>
 
 <script type="text/javascript">
+
+	function checkPasswordStrength(password) {
+	  // Initialize variables
+	  var strength = 0;
+	  var tips = "";
+
+	  // Check password length
+	  if (password.length < 8) {
+	    return "Make the password longer. ";
+	  }
+	 
+
+	  // Check for mixed case
+	  if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+	    strength += 1;
+	  } else {
+	    return "Use both lowercase and uppercase letters for password. ";
+	  }
+
+	  // Check for numbers
+	  if (password.match(/\d/)) {
+	    strength += 1;
+	  } else {
+	    return "Include at least one number for password ";
+	  }
+
+	  // Check for special characters
+	  if (password.match(/[^a-zA-Z\d]/)) {
+	    strength += 1;
+	  } else {
+	    return "Include at least one special character in password";
+	  }
+	  return null;
+	}
+	
 	function validateForm()
 	{
 		var a = document.forms["SignInForm"]["name"].value;
@@ -16,6 +51,7 @@
 		var c = document.forms["SignInForm"]["username"].value;
 		var y = document.forms["SignInForm"]["password"].value;
 		var x = document.forms["SignInForm"]["passagain"].value;
+		var kq;
 
 		
 		if (a=="")
@@ -38,6 +74,17 @@
 				showNotice("Vui lòng nhập mật khẩu");
 				return false;
 			}
+		
+		else
+		{
+			kq = checkPasswordStrength(y);
+			if (kq!=null)
+			{
+				showNotice(kq);
+				return false;
+			}
+		}
+		
 		if (x=="")
 		{
 			showNotice("Vui lòng nhập lại mật khẩu");
@@ -48,7 +95,7 @@
 			showNotice("Mật khẩu không khớp. Vui lòng nhập lại");
 			return false;
 		}
-		
+		console.log("da test");
 		return true;
 	}
 	function showVerify()
@@ -83,7 +130,7 @@
                <div class="col-lg-6" style="max-width: 100%;">
                    <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Tên học viên (*)</b></div> </a> <input style="min-width: 400px; margin-left: 50px;" placeholder="Hãy điền tên của bạn nhé" type="text" name="name" id="" value="${sessionScope.signing_hv.tenHocVien}">
                    <p></p>
-                   <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Số điện thoại </b></a></div>  <input style="min-width: 400px; margin-left: 50px" placeholder="Số điện thoại của bạn" type="text" name="sdt" id="" value="${sessionScope.signing_hv.sdt}">
+                   <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Số điện thoại </b></a></div>  <input style="min-width: 400px; margin-left: 50px" placeholder="Số điện thoại của bạn" type="text" pattern="[0-9]{1}[0-9]{9}"  title="Số điện thoại 10 số" name="sdt" id="" value="${sessionScope.signing_hv.sdt}">
                    <p></p>
                    <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Email(*) </b></a></div>  <input style="min-width: 400px; margin-left: 50px"  placeholder="Email của bạn (nếu có)" type="email" name="email" id="" value="${sessionScope.signing_hv.email}">
                    <p></p>
@@ -91,9 +138,9 @@
                    <p></p>
                    <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Tên đăng nhập (*) </b></a></div>  <input style="min-width: 400px; margin-left: 50px" placeholder="Tên đăng nhập bạn thích" type="text" name="username" id="" value="${sessionScope.signing_account.username}">
                    <p></p>
-                   <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Nhập mật khẩu (*) </b></a></div>  <input style="min-width: 400px; margin-left: 50px" placeholder="Mật khẩu" type="password" name="password" id="" value="${sessionScope.signing_account.password}">
+                   <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Nhập mật khẩu (*) </b></a></div>  <input style="min-width: 400px; margin-left: 50px" placeholder="Mật khẩu" type="password" name="password" minlength="8"  title="At least 8 characters" id="" value="${sessionScope.signing_account.password}">
                    <p></p>
-                   <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Nhập lại mật khẩu (*) </b></a></div>  <input style="min-width: 400px; margin-left: 50px" placeholder="Hãy nhập lại chính xác nhé" type="text" name="passagain" id="">
+                   <div style="min-width: 250px; display: inline-block; margin-left: 135px"><a style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Nhập lại mật khẩu (*) </b></a></div>  <input style="min-width: 400px; margin-left: 50px" placeholder="Hãy nhập lại chính xác nhé" type="password" minlength="8"  title="At least 8 characters" name="passagain" id="">
                    <p></p>
                    </div>
                <div class="col-lg-12" style="text-align: center"> <i style="color: red;">${errorStringUsername}</i> </div>

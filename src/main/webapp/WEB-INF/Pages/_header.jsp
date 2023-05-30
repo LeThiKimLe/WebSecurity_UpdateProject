@@ -90,16 +90,18 @@
 		  			return true;
 		  		}
 			</script>
-          <li style="margin-left: 50px">
-           <a href="cart">
-	           <div class="cart_shopping">
-	          		<i class="fa fa-shopping-cart" style="margin: 0 5px; font-size: 20px;"></i> 
-						<c:if test="${sessionScope.cart!=null && sessionScope.cart.size()!=0}">
-							<div class="cart_number">${sessionScope.cart.size()}</div>
-						</c:if>
-	          </div>
-          </a>
-          </li>
+			<c:if test="${sessionScope.role=='HV'}">
+	          <li style="margin-left: 50px">
+	           <a href="cart">
+		           <div class="cart_shopping">
+		          		<i class="fa fa-shopping-cart" style="margin: 0 5px; font-size: 20px;"></i> 
+							<c:if test="${sessionScope.cart!=null && sessionScope.cart.size()!=0}">
+								<div class="cart_number">${sessionScope.cart.size()}</div>
+							</c:if>
+		          </div>
+	          </a>
+	          </li>
+          </c:if>
           <li id="privatepage" onclick="return login_request()"><a href="mypage"> <i class="fa fa-user" style="font-size: 20px;"></i> <b style="margin-left: 5px"><%=user%></b></a></li>
           
           <li style="margin:0; border-right: 1px solid #ccc;" class="login"><a href="login" class="text-uppercase" style="text-decoration: underline;font-size: 10px;">Đăng nhập</a></li>

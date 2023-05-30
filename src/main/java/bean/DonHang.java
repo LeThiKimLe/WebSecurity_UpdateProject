@@ -23,6 +23,7 @@ public class DonHang implements java.io.Serializable {
 	private int tongSoTien;
 	private Date ngayThanhToan;
 
+
 	public DonHang() {
 		tongSoTien=0;
 	}
@@ -123,12 +124,13 @@ public class DonHang implements java.io.Serializable {
 	
 	public void TaoHoaDon(Connection conn) throws SQLException
 	{
-        String sql = "Insert into DonHang values (?,?,?,?)";
+        String sql = "Insert into DonHang values (?,?,?,?,?,1)";
         PreparedStatement pstm = conn.prepareStatement(sql);
         pstm.setString(1, this.maDonHang);
         pstm.setBigDecimal(2, BigDecimal.valueOf(0));
         pstm.setDate(3, this.ngayThanhToan);
         pstm.setString(4, this.hocVien);
+        pstm.setDate(5, this.ngayThanhToan);
         pstm.executeUpdate();
 	}
 	

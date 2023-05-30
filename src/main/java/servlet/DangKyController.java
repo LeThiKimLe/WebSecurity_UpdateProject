@@ -9,8 +9,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import utils.DBUtils;
+import utilsclass.JWT_authen;
 
 import java.io.IOException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -55,7 +60,27 @@ public class DangKyController extends HttpServlet {
 		{
 			if (action.equalsIgnoreCase("verify"))
 			{
-				doVerify(request, response);
+				try {
+					doVerify(request, response);
+				} catch (UnrecoverableKeyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (KeyStoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CertificateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ServletException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -122,24 +147,13 @@ public class DangKyController extends HttpServlet {
 		
 		if (checkUser==true)
 		{
-//			String verifyCodeString = DBUtils.getAlphaNumericString(6);
-//			sendEmail(email, verifyCodeString);
-//			session.setAttribute("otpcode", verifyCodeString);
-//			request.setAttribute("sendEmail", "ok");
-			
-			try {
-				signInHocVien.setMaHocVien(signInHocVien.autoID(conn));
-				accountDangKy.setIdString(accountDangKy.autoID());
-				DBUtils.YeuCauDangKy(conn, signInHocVien, accountDangKy);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-//			request.setAttribute("verifyCode", "ok");
+			String verifyCodeString = DBUtils.getAlphaNumericString(6);
+			sendEmail(email, verifyCodeString);
+			session.setAttribute("otpcode", verifyCodeString);
+			request.setAttribute("sendEmail", "ok");
 			RequestDispatcher dispatcher = request.getServletContext()
-	                .getRequestDispatcher("/WEB-INF/Pages/DangNhap.jsp");
-	        dispatcher.forward(request, response);
-			
+		                .getRequestDispatcher("/WEB-INF/Pages/DangKy.jsp");
+		        dispatcher.forward(request, response);
 		}
 		else {
 			request.setAttribute("errorStringUsername", "Tên đăng nhập đã tồn tại. Vui lòng chọn tên đăng nhập khác");
@@ -168,7 +182,7 @@ public class DangKyController extends HttpServlet {
        }
 	}
 	
-	protected void doVerify(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doVerify(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
 	
 		Connection conn = null;
 		try {
@@ -205,11 +219,14 @@ public class DangKyController extends HttpServlet {
 			}
 			try {
 				DBUtils.YeuCauDangKy(conn, hVien, tkDangNhap);
+//				JWT_authen.getJWTToken(hVien.getMaHocVien(), "HV");
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			request.setAttribute("verifyCode", "ok");
+			session.removeAttribute("signing_hv");
+			
 			RequestDispatcher dispatcher = request.getServletContext()
 	                .getRequestDispatcher("/WEB-INF/Pages/DangNhap.jsp");
 	        dispatcher.forward(request, response);

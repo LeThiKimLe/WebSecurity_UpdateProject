@@ -184,11 +184,11 @@
   </context-param>
   <context-param>
     <param-name>user</param-name>
-    <param-value>20110248@student.hcmute.edu.vn</param-value>
+    <param-value>donthandochai123@gmail.com</param-value>
   </context-param>
   <context-param>
     <param-name>pass</param-name>
-    <param-value>lethikimle@020102</param-value>
+    <param-value>lpwtolmjqgbhqsok</param-value>
   </context-param>
   <servlet>
     <description></description>
@@ -219,4 +219,15 @@
     <filter-name>AccountFilter</filter-name>
     <url-pattern>/AccountFilter</url-pattern>
   </filter-mapping>
+  
+  <security-constraint>
+    <web-resource-collection>
+        <web-resource-name>securedapp</web-resource-name>
+        <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+</security-constraint>
+ 
 </web-app>

@@ -85,7 +85,7 @@ public class DangNhapController extends HttpServlet {
 	        String errorString = null;
 	        try
 	        {
-	        	accountDangNhap=DBUtils.YeuCauDangNhap(conn,username , password);
+	        	accountDangNhap=DBUtils.DangNhapHeThong(conn,username , password);
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	            errorString = e.getMessage();

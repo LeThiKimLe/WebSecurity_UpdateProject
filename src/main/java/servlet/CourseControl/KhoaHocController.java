@@ -76,7 +76,7 @@ public class KhoaHocController extends HttpServlet {
 		 }
 		 request.setAttribute("khoilopList", listlop);
          
-        // Forward sang /WEB-INF/views/productListView.jsp
+       
        response.setContentType("text/html;charset=UTF-8");
        RequestDispatcher dispatcher = request.getServletContext()
                 .getRequestDispatcher("/WEB-INF/Pages/KhoaHoc.jsp");

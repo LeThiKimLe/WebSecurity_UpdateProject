@@ -1,10 +1,12 @@
 package utils;
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.sql.Date;
 import java.util.List;
@@ -40,6 +42,66 @@ public class DBUtils
 	        return null;
 	    }
 	 
+	 public static DangNhap DangNhapHeThong(Connection conn, String username, String password) throws SQLException {
+	     
+		 DangNhap dn=null;
+		 dn= AuthenAccount(conn, username, password);
+	     return dn;
+	    }
+	 
+	 public static DangNhap AuthenAccount(Connection con, String username, String password)
+	 {
+		 DangNhap taiKhoan=null;
+		 try { 
+			 CallableStatement cstmt = con.prepareCall("{call doLogin(?, ?, ?, ?, ?)}");
+			 cstmt.setString(1, username);
+			 cstmt.setString(2, password);
+			 cstmt.registerOutParameter(3, Types.NVARCHAR); 
+			 cstmt.registerOutParameter(4, Types.VARCHAR); 
+			 cstmt.registerOutParameter(5, Types.VARCHAR); 
+			 cstmt.execute();
+			 if (cstmt.getString(3).equals("success"))
+			 {
+				 taiKhoan= new DangNhap(cstmt.getString(4), username ,cstmt.getString(5));
+			 }
+		 }
+		 catch (Exception e) 
+		 { e.printStackTrace(); }
+		 
+		 return taiKhoan;
+		 
+	 }
+	 
+	 public static void addAccount(Connection con, String id, String maHocVien, String maGiaoVien, String maQTV, String username, String password ) {
+		 try {
+			 PreparedStatement pstmt = con.prepareStatement("{call addAccount(?,?,?,?,?,?)}");
+			 pstmt.setString(1, id);
+			 pstmt.setString(5, username);
+			 pstmt.setString(6, password);
+			 if (maHocVien==null)
+				 pstmt.setNull(2, Types.VARCHAR);
+			 else
+				 pstmt.setString(2, maHocVien);
+			 
+			 if (maGiaoVien==null)
+				 pstmt.setNull(3, Types.VARCHAR);
+			 else
+				 pstmt.setString(3, maGiaoVien);
+			 
+			 if (maQTV==null)
+				 pstmt.setNull(4, Types.VARCHAR);
+			 else
+				 pstmt.setString(4, maQTV);
+			 
+			 pstmt.executeUpdate();
+			 pstmt.close();
+			 }
+		 	catch (Exception e)
+		 	{ 
+		 		e.printStackTrace();
+		 		}
+		 }
+	 
 	 public static void YeuCauDangKy(Connection conn, HocVien hv, DangNhap dn) throws SQLException {
 	        String sql = "Insert into HocVien values(?, ?, ?, ?, ?,?)";
 	 
@@ -53,15 +115,15 @@ public class DBUtils
 	        pstm.setString(6, null);
 	        pstm.executeUpdate();
 	        
-	        String sql2 = "Insert into DangNhap values(?, ?, null, null, ?, ?, null)";
+	        addAccount( conn ,dn.getIdString(), hv.getMaHocVien() , null, null, dn.getUsername(), dn.getPassword());
 	   	 
-	        PreparedStatement pstm2 = conn.prepareStatement(sql2);
-	        
-	        pstm2.setString(1, dn.getIdString());
-	        pstm2.setString(2, hv.getMaHocVien());
-	        pstm2.setString(3, dn.getUsername());
-	        pstm2.setString(4, dn.getPassword());
-	        pstm2.executeUpdate();
+//	        PreparedStatement pstm2 = conn.prepareStatement(sql2);
+//	        
+//	        pstm2.setString(1, dn.getIdString());
+//	        pstm2.setString(2, hv.getMaHocVien());
+//	        pstm2.setString(3, dn.getUsername());
+//	        pstm2.setString(4, dn.getPassword());
+//	        pstm2.executeUpdate();
 	        
 	        long millis=System.currentTimeMillis();  
 	        java.sql.Date date=new java.sql.Date(millis);  
@@ -78,11 +140,25 @@ public class DBUtils
 	    }
 	 
 	 public static void YeuCauDoiMatKhau(Connection conn, String username, String newpass) throws SQLException {
-		 String sql = "Update DangNhap set password=? where username=?";
-	        PreparedStatement pstm = conn.prepareStatement(sql);
-	        pstm.setString(1, newpass);
-	        pstm.setString(2, username);
-	        pstm.executeUpdate();
+		 
+		 try {
+			 PreparedStatement pstmt = conn.prepareStatement("{call changePassword(?,?)}");
+			 pstmt.setString(1, username);
+			 pstmt.setString(2, newpass);
+			 
+			 pstmt.executeUpdate();
+			 pstmt.close();
+			 }
+		 	catch (Exception e)
+		 	{ 
+		 		e.printStackTrace();
+		 		}
+		 
+//		 String sql = "Update DangNhap set password=? where username=?";
+//	        PreparedStatement pstm = conn.prepareStatement(sql);
+//	        pstm.setString(1, newpass);
+//	        pstm.setString(2, username);
+//	        pstm.executeUpdate();
 	 }
 	 
 	 public static void ThemBinhLuan(Connection conn, PhanHoi ph) throws SQLException {

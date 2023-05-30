@@ -3,6 +3,7 @@ package servlet.CourseControl;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -47,6 +48,26 @@ public class FeedBackController extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		
+		// get the CSRF cookie
+		String csrfCookie = null;
+		for (Cookie cookie : request.getCookies()) {
+			if (cookie.getName().equals("csrf")) {
+				csrfCookie = cookie.getValue();
+			}
+		}
+
+		// get the CSRF form field
+		String csrfField = request.getParameter("csrfToken");
+		// validate CSRF
+		if (csrfCookie == null || csrfField == null || !csrfCookie.equals(csrfField)) {
+			try {
+				response.sendError(401);
+			} catch (IOException e) {
+				// ...
+			}
+			return;
+		}
+		
 		Connection conn = null;
 		try {
 			conn = ConnectDataBase.getConnection();
@@ -68,10 +89,14 @@ public class FeedBackController extends HttpServlet {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+        
         request.setAttribute("sent", "ok");
         request.setAttribute("maKhoaHoc", ma_couse);
         response.setContentType("text/html;charset=UTF-8");
         response.sendRedirect("course-detail?maKhoaHoc="+ma_couse+"&sentfeedback=ok");
+//        response.setContentType("text/html;charset=UTF-8");
+//	    RequestDispatcher dispatcher2= request.getServletContext().getRequestDispatcher("/course-detail");
+//	    dispatcher2.forward(request, response);
         
 //	    RequestDispatcher dispatcher2= request.getServletContext().getRequestDispatcher("/course-detail");
 //	    dispatcher2.forward(request, response);

@@ -24,12 +24,12 @@ public class DangNhap implements java.io.Serializable {
 	private String username;
 	private String password;
 	private String role;
+	private String salt;
 
 	public DangNhap(String username, String password) {
 		this.username=username;
 		this.password=password;
 	}
-
 	
 	public DangNhap() throws SQLException {
 		String idString=autoID();
@@ -92,6 +92,13 @@ public class DangNhap implements java.io.Serializable {
 		this.role = role;
 	}
 	
+	public DangNhap(String identity,String username, String role) throws SQLException
+	{
+		this.identity = identity;
+		this.username = username;
+		this.role = role;
+	}
+	
 	public String getId() {
 		return this.identity;
 	}
@@ -130,6 +137,17 @@ public class DangNhap implements java.io.Serializable {
 
 	public void setIdString(String idString) {
 		this.idString = idString;
+	}
+	
+	
+
+	public String getSalt() {
+		return salt;
+	}
+
+
+	public void setSalt(String salt) {
+		this.salt = salt;
 	}
 
 }
