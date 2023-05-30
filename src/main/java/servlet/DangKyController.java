@@ -4,6 +4,7 @@ import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -78,6 +80,9 @@ public class DangKyController extends HttpServlet {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidKeySpecException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -182,7 +187,7 @@ public class DangKyController extends HttpServlet {
        }
 	}
 	
-	protected void doVerify(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
+	protected void doVerify(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CertificateException, InvalidKeySpecException {
 	
 		Connection conn = null;
 		try {
@@ -209,7 +214,7 @@ public class DangKyController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+			String token="";
 			tkDangNhap= (DangNhap)session.getAttribute("signing_account");
 			try {
 				tkDangNhap.setIdString(tkDangNhap.autoID());
@@ -219,14 +224,13 @@ public class DangKyController extends HttpServlet {
 			}
 			try {
 				DBUtils.YeuCauDangKy(conn, hVien, tkDangNhap);
-//				JWT_authen.getJWTToken(hVien.getMaHocVien(), "HV");
+				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			request.setAttribute("verifyCode", "ok");
 			session.removeAttribute("signing_hv");
-			
 			RequestDispatcher dispatcher = request.getServletContext()
 	                .getRequestDispatcher("/WEB-INF/Pages/DangNhap.jsp");
 	        dispatcher.forward(request, response);

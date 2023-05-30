@@ -80,7 +80,6 @@ public class AccountFilter extends HttpFilter implements Filter {
         		session.setMaxInactiveInterval(60*60*60);
         		for(Cookie cookie : cookies)
     	    	{
-        			System.out.print(cookie.getName());
     	    		if(cookie.getName().equals("username"))
     	    		{
     	    			session.setAttribute("username", cookie.getValue());
@@ -94,7 +93,7 @@ public class AccountFilter extends HttpFilter implements Filter {
     	    		
     	    		if(cookie.getName().equals("role"))
     	    		{
-    	    			session.setAttribute("role", maUserString);
+    	    			session.setAttribute("role", cookie.getValue());
     	    			HocVien loginHocVien= new HocVien();
     	    			if(cookie.getValue().equals("HV"))
     	    			{
@@ -117,7 +116,6 @@ public class AccountFilter extends HttpFilter implements Filter {
     						e.printStackTrace();
     					}
     	    		}
-    	    		
     	    	}
         	}
         }

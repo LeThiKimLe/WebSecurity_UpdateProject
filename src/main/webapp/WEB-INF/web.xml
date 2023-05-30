@@ -219,15 +219,40 @@
     <filter-name>AccountFilter</filter-name>
     <url-pattern>/AccountFilter</url-pattern>
   </filter-mapping>
-  
   <security-constraint>
     <web-resource-collection>
-        <web-resource-name>securedapp</web-resource-name>
-        <url-pattern>/*</url-pattern>
+      <web-resource-name>securedapp</web-resource-name>
+      <url-pattern>/*</url-pattern>
     </web-resource-collection>
     <user-data-constraint>
-        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
-</security-constraint>
- 
+  </security-constraint>
+  <filter>
+    <display-name>HocVienFilter</display-name>
+    <filter-name>HocVienFilter</filter-name>
+    <filter-class>filter.HocVienFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>HocVienFilter</filter-name>
+    <url-pattern>/HocVienFilter</url-pattern>
+  </filter-mapping>
+  <filter>
+    <display-name>GiaoVienFilter</display-name>
+    <filter-name>GiaoVienFilter</filter-name>
+    <filter-class>filter.GiaoVienFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>GiaoVienFilter</filter-name>
+    <url-pattern>/GiaoVienFilter</url-pattern>
+  </filter-mapping>
+  <filter>
+    <display-name>QTVFilter</display-name>
+    <filter-name>QTVFilter</filter-name>
+    <filter-class>filter.QTVFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>QTVFilter</filter-name>
+    <url-pattern>/QTVFilter</url-pattern>
+  </filter-mapping>
 </web-app>
