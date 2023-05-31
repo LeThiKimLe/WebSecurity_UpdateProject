@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="bean.*" %>
 <%@ page import="utils.DBUtils" %>
+
 <!DOCTYPE html>
 <html>
 <head>

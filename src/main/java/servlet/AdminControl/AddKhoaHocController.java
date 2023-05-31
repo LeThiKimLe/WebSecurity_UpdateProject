@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.jdt.internal.compiler.env.IModule.IService;
 
 import com.oracle.wls.shaded.org.apache.xalan.xsltc.compiler.sym;
 
