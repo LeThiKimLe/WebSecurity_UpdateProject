@@ -18,7 +18,6 @@ public class SQLServerConnection
 			try {
 				Class.forName(dbDriver);
 				conn=DriverManager.getConnection(connectionURL, dbUsername, dbPassword);
-				System.out.print("Connection successfully");
 			} catch (Exception ex){
 				System.out.print("Connection failure");
 				ex.printStackTrace();

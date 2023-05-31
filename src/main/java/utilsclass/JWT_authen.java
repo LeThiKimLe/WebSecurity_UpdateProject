@@ -11,11 +11,13 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.sql.Date;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.print.DocFlavor.INPUT_STREAM;
 
 import io.jsonwebtoken.*;
@@ -81,18 +84,81 @@ public class JWT_authen {
 	    String jwtToken = Jwts.builder()
 	            .claim("userId", userId)
 	            .claim("role", userRole)
-	            .setSubject("jane")
+	            .setSubject(userId)
 	            .setId(UUID.randomUUID().toString())
 	            .setIssuedAt(Date.from(now))
-	            .setExpiration(Date.from(now.plus(5l, ChronoUnit.MINUTES)))
+	            .setExpiration(Date.from(now.plus(60l, ChronoUnit.MINUTES)))
 	            .signWith(SignatureAlgorithm.RS256, privateKey)
 	            .compact();
-	    System.out.print(jwtToken);
 	    return jwtToken;
 	}
 	
-	
-	
-	
+	public static Claims parseJwt(String jwtString) throws InvalidKeySpecException, NoSuchAlgorithmException, ExpiredJwtException, UnsupportedJwtException, MalformedJwtException, SignatureException, IllegalArgumentException {
 
+		
+	    PublicKey publicKey = getPublicKey();
+	    @SuppressWarnings("unchecked")
+		Jws<Claims> jwt = (Jws<Claims>) Jwts.parser()
+	            .setSigningKey(publicKey)
+	            .parseClaimsJws(jwtString);
+	    Claims claims = jwt.getBody();
+	    return claims;
+	}
+
+	private static PublicKey getPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException {
+	    String rsaPublicKey = "-----BEGIN PUBLIC KEY-----" +
+	            "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyu3NB7Tr3nzETLNbZHYi" +
+	            "ZvgNeg3/OZUJZl40LzBzYGOD/8575eJETjfQ3QXaNyvNThu6Uf9B/V73QUxKI4/+" +
+	            "rwlbjA3niIga4MdDiY4b9K/KFA+HedvtZF1yE2p4smXGydPLOLBe31EgriGTob78" +
+	            "EE3f7SMFxlNaqn4Pm7KJkOodnMz0ilwLseeL1IkTtiFn/2OrcMpPHMtTxyDn3pQl" +
+	            "VCeJM5j/grDh+0YdyTMGdDHOBgM53VqSsDVyo1TNtP2yhPRYCIiI85hEHVaUnVM9" +
+	            "jGwCjNZLJHWh10Mrmh6B3z8BEmLhMAZXeL4fQBjBd42DLvIIJwM1USKFhjK+XghN" +
+	            "rQIDAQAB" +
+	            "-----END PUBLIC KEY-----";
+	    rsaPublicKey = rsaPublicKey.replace("-----BEGIN PUBLIC KEY-----", "");
+	    rsaPublicKey = rsaPublicKey.replace("-----END PUBLIC KEY-----", "");
+	    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(Base64.getDecoder().decode(rsaPublicKey));
+	    KeyFactory kf = KeyFactory.getInstance("RSA");
+	    PublicKey publicKey = kf.generatePublic(keySpec);
+	    return publicKey;
+	}
+	
+//	public static void main(String[] args)
+//	{
+//		String token="";
+//		Claims claims=null;
+//		try {
+//			token=getJWTToken("HV003", "GV");
+//		} catch (UnrecoverableKeyException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (KeyStoreException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (NoSuchAlgorithmException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (CertificateException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (InvalidKeySpecException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//		
+//		try {
+//			claims=parseJwt(token);
+//		} catch (ExpiredJwtException | UnsupportedJwtException | MalformedJwtException | SignatureException
+//				| InvalidKeySpecException | NoSuchAlgorithmException | IllegalArgumentException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		System.out.print(claims.get("role"));
+//		
+//	}
+	
 }
