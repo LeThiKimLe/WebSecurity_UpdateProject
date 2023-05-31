@@ -69,7 +69,10 @@ public class QTVFilter extends HttpFilter implements Filter {
 							claims=JWT_authen.parseJwt(token);
 							String role= (String) claims.get("role");
 							if (role.equals("QTV"))
+							{
 								chain.doFilter(request, response);
+								return;
+							}
 							else
 							{
 								try {

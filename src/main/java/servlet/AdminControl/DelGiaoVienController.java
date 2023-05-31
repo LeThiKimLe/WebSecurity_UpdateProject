@@ -44,7 +44,7 @@ public class DelGiaoVienController extends HttpServlet {
  
         String idStr = (String) request.getParameter("maGiaoVien");
        
-       GiaoVien gv = null;
+        GiaoVien gv = null;
  
         String errorString = null;
  

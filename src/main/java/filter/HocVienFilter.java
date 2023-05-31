@@ -70,7 +70,6 @@ public class HocVienFilter extends HttpFilter implements Filter {
 							String role= (String) claims.get("role");
 							if (role.equals("HV"))
 							{
-								System.out.print("pass");
 								chain.doFilter(request, response);
 								return;
 							}
