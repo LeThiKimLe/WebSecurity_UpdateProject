@@ -219,6 +219,7 @@
     <filter-name>AccountFilter</filter-name>
     <url-pattern>/AccountFilter</url-pattern>
   </filter-mapping>
+  
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>securedapp</web-resource-name>
@@ -255,4 +256,5 @@
     <filter-name>QTVFilter</filter-name>
     <url-pattern>/QTVFilter</url-pattern>
   </filter-mapping>
+
 </web-app>

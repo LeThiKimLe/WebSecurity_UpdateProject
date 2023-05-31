@@ -3,7 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page import="bean.*" %>
 <%@ page import="utils.DBUtils" %>
+
 <%@ page import="utilsclass.CSRF" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -118,6 +120,7 @@ String csrfToken = CSRF.getToken();
 
 // place the CSRF token in a cookie
 Cookie cookie = new Cookie("csrf", csrfToken);
+cookie.setHttpOnly(true);
 response.addCookie(cookie);
 %>
 

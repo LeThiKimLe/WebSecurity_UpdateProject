@@ -24,7 +24,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpSession;
-
+//import org.apache.commons.text.StringEscapeUtils;
 
 import bean.*;
 import dao.ConnectDataBase;
@@ -88,11 +88,17 @@ public class DangNhapController extends HttpServlet {
 			
 	        String username= (String)request.getParameter("username");
 	        String password = new String(request.getParameter("password").getBytes("ISO-8859-1"), "UTF-8");
+	        
+	        String sanitizedUsername = sanitizeInput(username);
+	        String sanitizedPassword = sanitizeInput(password);
+	        
+	        boolean isAuthenticated = false;
+	        
 	        DangNhap accountDangNhap=null;
 	        String errorString = null;
 	        try
 	        {
-	        	accountDangNhap=DBUtils.DangNhapHeThong(conn,username , password);
+	        	accountDangNhap=DBUtils.YeuCauDangNhap(conn,sanitizedUsername , sanitizedPassword);
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	            errorString = e.getMessage();
@@ -101,7 +107,7 @@ public class DangNhapController extends HttpServlet {
 	        	errorString="Tên đăng nhập hoặc mật khẩu sai";
 	        
 	        request.setAttribute("errorString", errorString);
-	        request.setAttribute("username", username);
+	        request.setAttribute("username", sanitizedUsername);
 	       
 	        if (errorString != null) {
 	            RequestDispatcher dispatcher = request.getServletContext()
@@ -111,27 +117,33 @@ public class DangNhapController extends HttpServlet {
 	        else 
 	        {	
 	        	HttpSession session = request.getSession();
-				session.setAttribute("username", username);
+				session.setAttribute("username", sanitizedUsername);
 				session.setMaxInactiveInterval(60*60*60);
+			
 				
-				Cookie usernameCookie = new Cookie("username", username);
+				
+				Cookie usernameCookie = new Cookie("username", sanitizedUsername);
 				usernameCookie.setMaxAge(31536000);
+				usernameCookie.setHttpOnly(true);
 				response.addCookie(usernameCookie);
 				
 				Cookie userID = new Cookie("userID", accountDangNhap.getId());
 				userID.setMaxAge(31536000);
+				userID.setHttpOnly(true);
 				response.addCookie(userID);
 				
 				session.setAttribute("usercode", accountDangNhap.getId());
 				
 				Cookie role = new Cookie("role", accountDangNhap.getRole());
 				role.setMaxAge(31536000);
+				role.setHttpOnly(true);
 				response.addCookie(role);
 				session.setAttribute("role", accountDangNhap.getRole());
 				if (accountDangNhap.getRole().equals("HV"))
 				{
 					Cookie sodu = new Cookie("soduvi", String.valueOf(new HocVien(accountDangNhap.getId()).LaySoDuVi(conn)));
 					sodu.setMaxAge(31536000);
+					sodu.setHttpOnly(true);
 					response.addCookie(sodu);
 				
 					HocVien loginHocVien= new HocVien(accountDangNhap.getId());
@@ -151,8 +163,7 @@ public class DangNhapController extends HttpServlet {
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
-					
+					}					
 				}
 				
 				String token="";
@@ -182,9 +193,17 @@ public class DangNhapController extends HttpServlet {
 				access_token.setMaxAge(31536000);
 				response.addCookie(access_token);
 				response.sendRedirect(request.getContextPath() +"/home");
-			}
-	        
+			}    
 		}
+	
+	private String sanitizeInput(String input) {
+		 String sanitizedInput = input.replaceAll("#jaVasCript:", "")
+				 .replaceAll("alert\\(.*\\)", "")
+	                .replaceAll("[^a-zA-Z0-9]", "");
+	        return sanitizedInput;
+    }
+  
+	
 	protected void getPass(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
 	{
 		Connection conn = null;
