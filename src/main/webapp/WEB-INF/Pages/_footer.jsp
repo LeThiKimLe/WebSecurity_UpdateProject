@@ -30,6 +30,7 @@
 			<%@include file="/resources/css/owl.carousel.css"%>			
 			<%@include file="/resources/css/jquery-ui.css"%>			
 			<%@include file="/resources/css/main.css"%>
+			
 		</style>
 			<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 			<link rel="stylesheet" href="https://cdn.linearicons.com/free/1.0.0/icon-font.min.css">
@@ -151,6 +152,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/main.js"></script>
 			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/notice.js"></script>
 			<script type="text/javascript" src="${pageContext.request.contextPath}/resources/js/login-script.js"></script>					
-
 </body>
 </html>

@@ -98,13 +98,14 @@ public class DBUntilQLGV {
         pstm1.executeUpdate();
         
         DangNhap dNhap=new DangNhap();
-        PreparedStatement pstm2 = conn.prepareStatement(sql2);
-        pstm2.setString(1, dNhap.getId());
-        pstm2.setString(2, gv.getMaGiaoVien());
-        pstm2.setString(3, gv.getSdt());
-        pstm2.setString(4, "1234");
-        pstm2.setString(5, "GV");
-        pstm2.executeUpdate();
+//        PreparedStatement pstm2 = conn.prepareStatement(sql2);
+        DBUtils.addAccount( conn ,dNhap.getId(), null , gv.getMaGiaoVien() , null, gv.getSdt() , "1234");
+//        pstm2.setString(1, dNhap.getId());
+//        pstm2.setString(2, gv.getMaGiaoVien());
+//        pstm2.setString(3, gv.getSdt());
+//        pstm2.setString(4, "1234");
+//        pstm2.setString(5, "GV");
+//        pstm2.executeUpdate();
     }
 	public static void deleteGiaoVien(Connection conn, String inmagv) throws SQLException {
         String sql = "Update GiaoVien set TrangThaiLamViec=0 where MaGiaoVien=?";

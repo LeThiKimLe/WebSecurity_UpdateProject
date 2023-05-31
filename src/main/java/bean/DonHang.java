@@ -23,6 +23,7 @@ public class DonHang implements java.io.Serializable {
 	private int tongSoTien;
 	private Date ngayThanhToan;
 
+
 	public DonHang() {
 		tongSoTien=0;
 	}

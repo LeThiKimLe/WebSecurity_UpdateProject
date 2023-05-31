@@ -181,7 +181,6 @@
        </table>
       <button type="submit" style="background-color:coral" >Lưu Thông Tin</button>  
       <br>
-      
          </form> 
          <br>
          

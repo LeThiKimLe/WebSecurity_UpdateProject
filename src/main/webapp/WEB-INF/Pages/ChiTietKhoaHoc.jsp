@@ -4,6 +4,8 @@
 <%@ page import="bean.*" %>
 <%@ page import="utils.DBUtils" %>
 
+<%@ page import="utilsclass.CSRF" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -112,6 +114,16 @@
 
 <body>
 
+<%
+// generate a random CSRF token
+String csrfToken = CSRF.getToken();
+
+// place the CSRF token in a cookie
+Cookie cookie = new Cookie("csrf", csrfToken);
+cookie.setHttpOnly(true);
+response.addCookie(cookie);
+%>
+
 <jsp:include page="_header.jsp"></jsp:include>
 
 <!-- Start course-details Area -->
@@ -181,6 +193,7 @@
 			                                	<div class="feedeback col-lg-12">
 			                                		<h4 class="pb-20" style="margin-top: 20px;">Feedback của bạn</h4>
 			                                		<textarea name="feedback" class="form-control" cols="10" rows="10"></textarea>
+			                                		 <input type="hidden" name="csrfToken" value="<%= csrfToken %>"/>
 			                                		<input class="mt-20 primary-btn text-right text-uppercase" type="submit" value="Gửi đánh giá"></input>
 			                                	</div>
 		                                	</div>
@@ -248,7 +261,9 @@
 							<a href="${pageContext.request.contextPath}/lession" class="primary-btn text-uppercase">QUẢN LÝ BÀI HỌC</a>
 						</c:when>
 						<c:otherwise>
+						<c:if test="${sessionScope.role=='HV'}">
 							<a href="${pageContext.request.contextPath}/cart?&action=buy&maKhoaHoc=${khoahoc.maKhoaHoc}" class="primary-btn text-uppercase">Thêm vào giỏ hàng</a>
+						</c:if>
 						</c:otherwise>
 						</c:choose>
 						</div>

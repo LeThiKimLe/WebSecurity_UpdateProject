@@ -22,6 +22,7 @@
 				showNotice("Vui lòng nhập mật khẩu");
 				return false;
 			}
+		
 		return true;	
 	}
 	
@@ -72,7 +73,7 @@
                 <div class="col-lg-3"></div>
                 <div class="col-lg-6" style="text-align: center; max-width: 100%;">
                     <p style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Tên đăng nhập</b> </p> <input style="min-width: 400px;" type="text" name="username" id="" value="${username}">
-                    <p style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Mật khẩu </b></p> <input style="min-width: 400px;" type="text" name="password" id="">
+                    <p style="margin-top:20px; margin-bottom: 10px; font-size: 20px;"><b>Mật khẩu </b></p> <input style="min-width: 400px;" type="password" name="password"  title="At least 6 characters" id="" >
                     <p></p>
                 </div>
                 <div class="col-lg-3"></div>

@@ -14,6 +14,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
+import java.security.spec.InvalidKeySpecException;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -23,6 +29,7 @@ import jakarta.servlet.http.HttpSession;
 import bean.*;
 import dao.ConnectDataBase;
 import utils.*;
+import utilsclass.JWT_authen;
 
 /**
  * Servlet implementation class DangNhapController
@@ -108,29 +115,35 @@ public class DangNhapController extends HttpServlet {
 	            dispatcher.forward(request, response);
 	        }
 	        else 
-	        {
+	        {	
 	        	HttpSession session = request.getSession();
-				session.setAttribute("username", username);
+				session.setAttribute("username", sanitizedUsername);
 				session.setMaxInactiveInterval(60*60*60);
+			
+				
 				
 				Cookie usernameCookie = new Cookie("username", sanitizedUsername);
 				usernameCookie.setMaxAge(31536000);
+				usernameCookie.setHttpOnly(true);
 				response.addCookie(usernameCookie);
 				
 				Cookie userID = new Cookie("userID", accountDangNhap.getId());
 				userID.setMaxAge(31536000);
+				userID.setHttpOnly(true);
 				response.addCookie(userID);
 				
 				session.setAttribute("usercode", accountDangNhap.getId());
 				
 				Cookie role = new Cookie("role", accountDangNhap.getRole());
 				role.setMaxAge(31536000);
+				role.setHttpOnly(true);
 				response.addCookie(role);
 				session.setAttribute("role", accountDangNhap.getRole());
 				if (accountDangNhap.getRole().equals("HV"))
 				{
 					Cookie sodu = new Cookie("soduvi", String.valueOf(new HocVien(accountDangNhap.getId()).LaySoDuVi(conn)));
 					sodu.setMaxAge(31536000);
+					sodu.setHttpOnly(true);
 					response.addCookie(sodu);
 				
 					HocVien loginHocVien= new HocVien(accountDangNhap.getId());
@@ -152,6 +165,33 @@ public class DangNhapController extends HttpServlet {
 						e.printStackTrace();
 					}					
 				}
+				
+				String token="";
+				try {
+					token = JWT_authen.getJWTToken(accountDangNhap.getId(),accountDangNhap.getRole());
+				} catch (UnrecoverableKeyException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (KeyStoreException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (NoSuchAlgorithmException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (CertificateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InvalidKeySpecException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				Cookie access_token = new Cookie("access_token", token);
+				access_token.setMaxAge(31536000);
+				response.addCookie(access_token);
 				response.sendRedirect(request.getContextPath() +"/home");
 			}    
 		}
