@@ -80,6 +80,7 @@ public class AccountFilter extends HttpFilter implements Filter {
         		session.setMaxInactiveInterval(60*60*60);
         		for(Cookie cookie : cookies)
     	    	{
+        			cookie.setHttpOnly(true);
         			System.out.print(cookie.getName());
     	    		if(cookie.getName().equals("username"))
     	    		{

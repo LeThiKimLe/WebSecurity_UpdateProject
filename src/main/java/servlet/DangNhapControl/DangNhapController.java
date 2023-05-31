@@ -106,25 +106,31 @@ public class DangNhapController extends HttpServlet {
 	        	HttpSession session = request.getSession();
 				session.setAttribute("username", username);
 				session.setMaxInactiveInterval(60*60*60);
+			
+				
 				
 				Cookie usernameCookie = new Cookie("username", username);
 				usernameCookie.setMaxAge(31536000);
+				usernameCookie.setHttpOnly(true);
 				response.addCookie(usernameCookie);
 				
 				Cookie userID = new Cookie("userID", accountDangNhap.getId());
 				userID.setMaxAge(31536000);
+				userID.setHttpOnly(true);
 				response.addCookie(userID);
 				
 				session.setAttribute("usercode", accountDangNhap.getId());
 				
 				Cookie role = new Cookie("role", accountDangNhap.getRole());
 				role.setMaxAge(31536000);
+				role.setHttpOnly(true);
 				response.addCookie(role);
 				session.setAttribute("role", accountDangNhap.getRole());
 				if (accountDangNhap.getRole().equals("HV"))
 				{
 					Cookie sodu = new Cookie("soduvi", String.valueOf(new HocVien(accountDangNhap.getId()).LaySoDuVi(conn)));
 					sodu.setMaxAge(31536000);
+					sodu.setHttpOnly(true);
 					response.addCookie(sodu);
 				
 					HocVien loginHocVien= new HocVien(accountDangNhap.getId());

@@ -118,6 +118,7 @@ String csrfToken = CSRF.getToken();
 
 // place the CSRF token in a cookie
 Cookie cookie = new Cookie("csrf", csrfToken);
+cookie.setHttpOnly(true);
 response.addCookie(cookie);
 %>
 
